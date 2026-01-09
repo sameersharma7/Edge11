@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import { getLeaderboard } from '../lib/supabaseClient';
 
 interface LeaderboardEntry {
-  userId: string;
-  name: string;
+  user_id: string;
+  total_picks: number;
   wins: number;
-  total: number;
-  winRate: number;
+  total_amount_wagered: number;
+  total_earnings: number;
+  win_rate: number;
 }
 
 export default function Leaderboard() {
@@ -34,16 +35,16 @@ export default function Leaderboard() {
 
   const medals = ['🥇', '🥈', '🥉'];
   const defaultPlayers: LeaderboardEntry[] = [
-    { userId: 'user_1', name: 'ProGamer', wins: 24, total: 30, winRate: 80 },
-    { userId: 'user_2', name: 'PredictMaster', wins: 21, total: 28, winRate: 75 },
-    { userId: 'user_3', name: 'CricketGod', wins: 19, total: 25, winRate: 76 },
-    { userId: 'user_4', name: 'DataAnalyst', wins: 18, total: 24, winRate: 75 },
-    { userId: 'user_5', name: 'SportsFanatic', wins: 17, total: 22, winRate: 77 },
-    { userId: 'user_6', name: 'QuickPick', wins: 15, total: 20, winRate: 75 },
-    { userId: 'user_7', name: 'WinnerZone', wins: 14, total: 19, winRate: 74 },
-    { userId: 'user_8', name: 'StarPlayer', wins: 13, total: 18, winRate: 72 },
-    { userId: 'user_9', name: 'TopChampion', wins: 12, total: 16, winRate: 75 },
-    { userId: 'user_10', name: 'BestBet', wins: 11, total: 15, winRate: 73 },
+    { user_id: 'user_1', total_picks: 30, wins: 24, total_amount_wagered: 3000, total_earnings: 3600, win_rate: 80 },
+    { user_id: 'user_2', total_picks: 28, wins: 21, total_amount_wagered: 2800, total_earnings: 3360, win_rate: 75 },
+    { user_id: 'user_3', total_picks: 25, wins: 19, total_amount_wagered: 2500, total_earnings: 3080, win_rate: 76 },
+    { user_id: 'user_4', total_picks: 24, wins: 18, total_amount_wagered: 2400, total_earnings: 2880, win_rate: 75 },
+    { user_id: 'user_5', total_picks: 22, wins: 17, total_amount_wagered: 2200, total_earnings: 2860, win_rate: 77 },
+    { user_id: 'user_6', total_picks: 20, wins: 15, total_amount_wagered: 2000, total_earnings: 2250, win_rate: 75 },
+    { user_id: 'user_7', total_picks: 19, wins: 14, total_amount_wagered: 1900, total_earnings: 2090, win_rate: 74 },
+    { user_id: 'user_8', total_picks: 18, wins: 13, total_amount_wagered: 1800, total_earnings: 1944, win_rate: 72 },
+    { user_id: 'user_9', total_picks: 16, wins: 12, total_amount_wagered: 1600, total_earnings: 1920, win_rate: 75 },
+    { user_id: 'user_10', total_picks: 15, wins: 11, total_amount_wagered: 1500, total_earnings: 1815, win_rate: 73 },
   ];
 
   const displayLeaderboard = leaderboard.length > 0 ? leaderboard : defaultPlayers;
@@ -88,7 +89,7 @@ export default function Leaderboard() {
 
           return (
             <div
-              key={player.userId}
+              key={player.user_id}
               className={`p-3 rounded-lg border transition hover:border-cyan-400/60 hover:shadow-lg hover:shadow-cyan-500/20 ${
                 isTopThree
                     ? `bg-linear-to-r ${medalColor}`
@@ -103,12 +104,12 @@ export default function Leaderboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-white truncate">
-                      {player.name}
+                      User #{idx + 1}
                     </p>
                     <div className="flex gap-2 text-xs text-slate-400 mt-0.5">
-                      <span className="text-cyan-400">{player.winRate}%</span>
+                      <span className="text-cyan-400">{player.win_rate.toFixed(1)}%</span>
                       <span>•</span>
-                      <span>{player.wins}/{player.total}</span>
+                      <span>{player.wins}/{player.total_picks}</span>
                     </div>
                   </div>
                 </div>
@@ -117,7 +118,7 @@ export default function Leaderboard() {
                 <div className="text-right shrink-0">
                   <p className="font-bold text-lg text-cyan-400">{player.wins}W</p>
                   <p className="text-xs text-slate-500">
-                    {player.total - player.wins}L
+                    {player.total_picks - player.wins}L
                   </p>
                 </div>
               </div>
