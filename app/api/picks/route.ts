@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { userId, matchName, pick, amount } = body;
+  const { userId, matchName, pick, amount } = body as {
+    userId?: string;
+    matchName?: string;
+    pick?: string;
+    amount?: number;
+  };
 
   if (!userId || !matchName || !pick) {
     return NextResponse.json(
@@ -17,7 +22,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Insert prediction into database
   const { error } = await supabase
     .from('predictions')
     .insert({

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Toast from '@/components/Toast';
-import YourPicks from '@/components/YourPicks';
-import Leaderboard from '@/components/Leaderboard';
-import { getMatches, placePick } from '@/lib/supabase';
+import Toast from '../component/toast';
+import YourPicks from '../component/yourpicks';
+import Leaderboard from '../component/leaderboard';
+import { getMatches, placePick } from '../lib/supabaseClient';
 
 interface Match {
   id: string;
@@ -84,15 +84,15 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <main className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-emerald-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-emerald-500/50">
+            <div className="w-10 h-10 bg-linear-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-emerald-500/50">
               E
             </div>
-            <h1 className="text-2xl font-black bg-gradient-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-black bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
               EDGE11
             </h1>
           </div>
@@ -111,7 +111,7 @@ export default function DashboardPage() {
       </nav>
 
       {/* Hero Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-emerald-900/20 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-emerald-500/20">
+      <div className="relative overflow-hidden bg-linear-to-r from-slate-900 via-emerald-900/20 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-emerald-500/20">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
@@ -121,7 +121,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black mb-4">
-                <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                   Welcome Back!
                 </span>
               </h2>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
               <div className="relative w-48 h-48">
                 <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 animate-spin" style={{ animationDuration: '8s' }} />
                 <div className="absolute inset-4 rounded-full border-2 border-cyan-500/30 animate-spin" style={{ animationDuration: '6s', animationDirection: 'reverse' }} />
-                <div className="absolute inset-8 rounded-full bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center backdrop-blur-sm border border-emerald-500/50">
+                <div className="absolute inset-8 rounded-full bg-linear-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center backdrop-blur-sm border border-emerald-500/50">
                   <div className="text-center">
                     <p className="text-4xl">🏆</p>
                     <p className="text-xs text-slate-400 mt-2">Play Now</p>
@@ -171,7 +171,7 @@ export default function DashboardPage() {
 
             <div className="space-y-4">
               {matches.length === 0 ? (
-                <div className="relative rounded-2xl overflow-hidden border border-dashed border-slate-600/50 p-8 text-center bg-gradient-to-br from-slate-700/20 to-slate-800/20 backdrop-blur-xl">
+                <div className="relative rounded-2xl overflow-hidden border border-dashed border-slate-600/50 p-8 text-center bg-linear-to-br from-slate-700/20 to-slate-800/20 backdrop-blur-xl">
                   <p className="text-slate-400 font-semibold">Loading matches...</p>
                 </div>
               ) : (
@@ -180,11 +180,11 @@ export default function DashboardPage() {
                     key={match.id}
                     className={`group relative rounded-2xl overflow-hidden border transition duration-300 backdrop-blur-xl ${
                       match.status === 'live'
-                        ? 'border-emerald-500/30 hover:border-emerald-400/60 bg-gradient-to-br from-slate-700/50 to-slate-800/50 hover:shadow-xl hover:shadow-emerald-500/20'
-                        : 'border-slate-600/30 hover:border-cyan-400/60 bg-gradient-to-br from-slate-700/30 to-slate-800/30 hover:shadow-xl hover:shadow-cyan-500/20'
+                        ? 'border-emerald-500/30 hover:border-emerald-400/60 bg-linear-to-br from-slate-700/50 to-slate-800/50 hover:shadow-xl hover:shadow-emerald-500/20'
+                        : 'border-slate-600/30 hover:border-cyan-400/60 bg-linear-to-br from-slate-700/30 to-slate-800/30 hover:shadow-xl hover:shadow-cyan-500/20'
                     }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
+                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
                     <div className="relative p-6">
                       {/* Match Header */}
                       <div className="flex justify-between items-start mb-4">
@@ -235,14 +235,14 @@ export default function DashboardPage() {
                           <button
                             onClick={() => placeBet(match.name, match.team1.name)}
                             disabled={loading}
-                            className="py-2 px-4 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-emerald-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="py-2 px-4 rounded-lg bg-linear-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-emerald-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {loading ? 'Processing...' : `Back ${match.team1.name}`}
                           </button>
                           <button
                             onClick={() => placeBet(match.name, match.team2.name)}
                             disabled={loading}
-                            className="py-2 px-4 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-amber-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="py-2 px-4 rounded-lg bg-linear-to-r from-amber-500 to-orange-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-amber-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {loading ? 'Processing...' : `Back ${match.team2.name}`}
                           </button>
@@ -268,4 +268,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Toasts Container */}
-      <div className="
+      <div className="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none">
+        {toasts.map((t) => (
+          <Toast key={t.id} message={t.message} type={t.type} onClose={() => removeToast(t.id)} />
+        ))}
+      </div>
+    </main>
+  );
+}
