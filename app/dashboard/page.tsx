@@ -1,33 +1,83 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem('edge11_logged_in');
     if (!loggedIn) {
       router.replace('/login');
+    } else {
+      // Get user ID from session storage or create one with proper UUID
+      let storedUserId = sessionStorage.getItem('edge11_user_id');
+      if (!storedUserId) {
+        storedUserId = crypto.randomUUID();
+        sessionStorage.setItem('edge11_user_id', storedUserId);
+      }
+      setUserId(storedUserId);
     }
   }, [router]);
 
   function handleLogout() {
     sessionStorage.removeItem('edge11_logged_in');
+    sessionStorage.removeItem('edge11_user_id');
     router.push('/login');
   }
 
+  // API function to place pick
+  async function placePick(pick: 'MI' | 'DC') {
+    if (!userId) {
+      alert('❌ User not initialized');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/picks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+          matchName: 'Mumbai Indians vs Delhi Capitals',
+          pick: pick,
+          amount: 100,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert('❌ Error: ' + data.message);
+        return;
+      }
+
+      alert('✅ ' + data.message);
+      // Optionally refresh page or update state
+    } catch (error) {
+      console.error('Error:', error);
+      alert('❌ Failed to place pick');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <main className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-emerald-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-emerald-500/50">
+            <div className="w-10 h-10 bg-linear-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-emerald-500/50">
               E
             </div>
-            <h1 className="text-2xl font-black bg-gradient-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-black bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
               EDGE11
             </h1>
           </div>
@@ -41,7 +91,7 @@ export default function DashboardPage() {
       </nav>
 
       {/* Hero Banner with Animated Background */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-emerald-900/20 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-emerald-500/20">
+      <div className="relative overflow-hidden bg-linear-to-r from-slate-900 via-emerald-900/20 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-emerald-500/20">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
@@ -51,7 +101,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black mb-4">
-                <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                   Welcome Back!
                 </span>
               </h2>
@@ -74,7 +124,7 @@ export default function DashboardPage() {
               <div className="relative w-48 h-48">
                 <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 animate-spin" style={{ animationDuration: '8s' }} />
                 <div className="absolute inset-4 rounded-full border-2 border-cyan-500/30 animate-spin" style={{ animationDuration: '6s', animationDirection: 'reverse' }} />
-                <div className="absolute inset-8 rounded-full bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center backdrop-blur-sm border border-emerald-500/50">
+                <div className="absolute inset-8 rounded-full bg-linear-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center backdrop-blur-sm border border-emerald-500/50">
                   <div className="text-center">
                     <p className="text-4xl">🏆</p>
                     <p className="text-xs text-slate-400 mt-2">Play Now</p>
@@ -99,15 +149,15 @@ export default function DashboardPage() {
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6 border border-emerald-500/20 hover:border-emerald-400/60 transition duration-300 hover:shadow-lg hover:shadow-emerald-500/20"
+                className="group relative overflow-hidden rounded-xl bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6 border border-emerald-500/20 hover:border-emerald-400/60 transition duration-300 hover:shadow-lg hover:shadow-emerald-500/20"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition duration-300" />
+                <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition duration-300" />
                 <div className="relative">
                   <div className="text-3xl mb-2">{stat.icon}</div>
                   <p className="text-slate-400 text-sm font-semibold uppercase tracking-widest mb-1">
                     {stat.label}
                   </p>
-                  <p className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                  <p className="text-3xl font-black bg-linear-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                     {stat.value}
                   </p>
                 </div>
@@ -124,8 +174,8 @@ export default function DashboardPage() {
 
             <div className="space-y-4">
               {/* Match Card 1 */}
-              <div className="group relative rounded-2xl overflow-hidden border border-emerald-500/30 hover:border-emerald-400/60 transition duration-300 hover:shadow-xl hover:shadow-emerald-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
+              <div className="group relative rounded-2xl overflow-hidden border border-emerald-500/30 hover:border-emerald-400/60 transition duration-300 hover:shadow-xl hover:shadow-emerald-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl">
+                <div className="absolute inset-0 bg-linear-to-r from-red-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
                 <div className="relative p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -154,19 +204,27 @@ export default function DashboardPage() {
                   <p className="text-sm text-slate-400 mb-4">Arun Jaitley Stadium, New Delhi</p>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <button className="py-2 px-4 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-emerald-500/50 transition duration-300 text-sm transform hover:scale-105">
-                      Back MI
+                    <button
+                      onClick={() => placePick('MI')}
+                      disabled={loading}
+                      className="py-2 px-4 rounded-lg bg-linear-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-emerald-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? 'Processing...' : 'Back MI'}
                     </button>
-                    <button className="py-2 px-4 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-amber-500/50 transition duration-300 text-sm transform hover:scale-105">
-                      Back DC
+                    <button
+                      onClick={() => placePick('DC')}
+                      disabled={loading}
+                      className="py-2 px-4 rounded-lg bg-linear-to-r from-amber-500 to-orange-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-amber-500/50 transition duration-300 text-sm transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? 'Processing...' : 'Back DC'}
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Match Card 2 */}
-              <div className="group relative rounded-2xl overflow-hidden border border-slate-600/30 hover:border-cyan-400/60 transition duration-300 hover:shadow-xl hover:shadow-cyan-500/20 bg-gradient-to-br from-slate-700/30 to-slate-800/30 backdrop-blur-xl">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
+              <div className="group relative rounded-2xl overflow-hidden border border-slate-600/30 hover:border-cyan-400/60 transition duration-300 hover:shadow-xl hover:shadow-cyan-500/20 bg-linear-to-br from-slate-700/30 to-slate-800/30 backdrop-blur-xl">
+                <div className="absolute inset-0 bg-linear-to-r from-cyan-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
                 <div className="relative p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -194,7 +252,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Coming Soon */}
-              <div className="relative rounded-2xl overflow-hidden border border-dashed border-slate-600/50 hover:border-emerald-400/50 transition duration-300 p-6 text-center bg-gradient-to-br from-slate-700/20 to-slate-800/20 backdrop-blur-xl">
+              <div className="relative rounded-2xl overflow-hidden border border-dashed border-slate-600/50 hover:border-emerald-400/50 transition duration-300 p-6 text-center bg-linear-to-br from-slate-700/20 to-slate-800/20 backdrop-blur-xl">
                 <p className="text-slate-400 font-semibold">More matches loading...</p>
                 <p className="text-xs text-slate-500 mt-2">Check back soon for more cricket and sports events</p>
               </div>
@@ -204,7 +262,7 @@ export default function DashboardPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Your Picks */}
-            <div className="rounded-2xl overflow-hidden border border-emerald-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+            <div className="rounded-2xl overflow-hidden border border-emerald-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
               <h3 className="text-sm font-bold text-emerald-400 mb-4 uppercase tracking-widest">📌 Your Picks</h3>
               <div className="space-y-3">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 text-center">
@@ -215,7 +273,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Leaderboard */}
-            <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+            <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
               <h3 className="text-sm font-bold text-cyan-400 mb-4 uppercase tracking-widest">👑 Top Predictors</h3>
               <div className="space-y-3">
                 {[
