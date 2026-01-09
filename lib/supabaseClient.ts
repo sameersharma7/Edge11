@@ -52,3 +52,39 @@ export async function getLeaderboard(limit = 10) {
 	arr.sort((a, b) => b.wins - a.wins);
 	return arr.slice(0, limit);
 }
+
+// Fetch matches from 'matches' table
+export async function getMatches() {
+	const { data, error } = await supabase.from('matches').select('*').order('start_time', { ascending: true });
+	if (error) {
+		console.error('Supabase getMatches error:', error);
+		return [];
+	}
+	return (data ?? []) as any[];
+}
+
+// Place a pick for a user
+export async function placePick(userId: string, matchName: string, pick: string, amount: number) {
+	try {
+		const { data, error } = await supabase.from('picks').insert([
+			{
+				user_id: userId,
+				user_name: userId,
+				match_name: matchName,
+				pick,
+				amount,
+				status: 'pending',
+			},
+		]);
+
+		if (error) {
+			console.error('Supabase placePick error:', error);
+			return { success: false, message: error.message || 'Failed to place pick' };
+		}
+
+		return { success: true, message: 'Pick placed successfully', data };
+	} catch (err: any) {
+		console.error('placePick exception', err);
+		return { success: false, message: err?.message || 'Failed to place pick' };
+	}
+}

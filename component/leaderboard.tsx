@@ -50,7 +50,7 @@ export default function Leaderboard() {
 
   if (loading && leaderboard.length === 0) {
     return (
-      <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+      <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
         <h3 className="text-sm font-bold text-cyan-400 mb-4 uppercase tracking-widest">
           👑 Top Predictors
         </h3>
@@ -63,7 +63,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+    <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-widest">
           👑 Top Predictors
@@ -98,7 +98,7 @@ export default function Leaderboard() {
               <div className="flex items-center justify-between gap-3">
                 {/* Rank & Name */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="text-2xl font-bold w-8 text-center flex-shrink-0">
+                  <div className="text-2xl font-bold w-8 text-center shrink-0">
                     {idx < 3 ? medals[idx] : `#${idx + 1}`}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -114,7 +114,7 @@ export default function Leaderboard() {
                 </div>
 
                 {/* Wins */}
-                <div className="text-right flex-shrink-0">
+                <div className="text-right shrink-0">
                   <p className="font-bold text-lg text-cyan-400">{player.wins}W</p>
                   <p className="text-xs text-slate-500">
                     {player.total - player.wins}L
@@ -135,7 +135,7 @@ export default function Leaderboard() {
       </div>
 
       {/* View More Button */}
-      <button className="w-full mt-4 py-2.5 px-4 rounded-lg bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 text-cyan-400 font-semibold hover:from-cyan-500/30 hover:to-emerald-500/30 transition border border-cyan-500/30 text-sm hover:shadow-lg hover:shadow-cyan-500/20">
+      <button className="w-full mt-4 py-2.5 px-4 rounded-lg bg-linear-to-r from-cyan-500/20 to-emerald-500/20 text-cyan-400 font-semibold hover:from-cyan-500/30 hover:to-emerald-500/30 transition border border-cyan-500/30 text-sm hover:shadow-lg hover:shadow-cyan-500/20">
         View Full Leaderboard →
       </button>
 
