@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.*.local
+*.bin
+AppData/
+.DS_Store
+.git/
+dist/
+build/
+out/
+.vercel/
