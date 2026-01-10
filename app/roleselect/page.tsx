@@ -8,7 +8,8 @@ export default function RoleSelectPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
-  const [selectedRole, setSelectedRole] = useState<'expert' | 'bettor' | null>(null);
+  const [selectedRole, setSelectedRole] =
+    useState<'expert' | 'bettor' | null>(null);
 
   const handleRoleSelect = async (role: 'expert' | 'bettor') => {
     if (!username.trim()) {
@@ -17,6 +18,8 @@ export default function RoleSelectPage() {
     }
 
     setLoading(true);
+
+    // Always ensure we have a UUID in sessionStorage
     const existingId = sessionStorage.getItem('edge11_user_id');
     const userId = existingId || crypto.randomUUID();
 
@@ -24,7 +27,14 @@ export default function RoleSelectPage() {
     sessionStorage.setItem('edge11_user_role', role);
     sessionStorage.setItem('edge11_username', username);
 
-    await createUserProfile(userId, username, role);
+    try {
+      await createUserProfile(userId, username, role);
+    } catch (error) {
+      console.error('createUserProfile error:', error);
+      alert('Failed to create user profile. Check console for details.');
+      setLoading(false);
+      return;
+    }
 
     setLoading(false);
     router.push('/dashboard');
@@ -51,8 +61,12 @@ export default function RoleSelectPage() {
               EDGE11
             </span>
           </h1>
-          <p className="text-xl text-slate-300 mb-2">The Expert Prediction Platform</p>
-          <p className="text-slate-400">Choose your role and start earning or winning</p>
+          <p className="text-xl text-slate-300 mb-2">
+            The Expert Prediction Platform
+          </p>
+          <p className="text-slate-400">
+            Choose your role and start earning or winning
+          </p>
         </div>
 
         {/* Username Input */}
@@ -86,7 +100,9 @@ export default function RoleSelectPage() {
             <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition" />
             <div className="relative">
               <div className="text-5xl mb-4">🎯</div>
-              <h2 className="text-2xl font-black text-white mb-4">Become an Expert</h2>
+              <h2 className="text-2xl font-black text-white mb-4">
+                Become an Expert
+              </h2>
 
               <div className="space-y-3 mb-6">
                 <p className="text-slate-300 font-semibold">What you get:</p>
@@ -115,8 +131,12 @@ export default function RoleSelectPage() {
               </div>
 
               <div className="p-4 rounded-lg bg-emerald-500/20 border border-emerald-500/50 mb-6">
-                <p className="text-xs text-slate-400 mb-1">Potential Monthly Earnings</p>
-                <p className="text-2xl font-black text-emerald-400">₹5,000 - ₹50,000+</p>
+                <p className="text-xs text-slate-400 mb-1">
+                  Potential Monthly Earnings
+                </p>
+                <p className="text-2xl font-black text-emerald-400">
+                  ₹5,000 - ₹50,000+
+                </p>
               </div>
 
               <button
@@ -124,7 +144,9 @@ export default function RoleSelectPage() {
                 disabled={loading}
                 className="w-full py-3 px-4 rounded-lg bg-linear-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-emerald-500/50 transition disabled:opacity-50"
               >
-                {loading && selectedRole === 'expert' ? 'Setting up...' : 'Start as Expert'}
+                {loading && selectedRole === 'expert'
+                  ? 'Setting up...'
+                  : 'Start as Expert'}
               </button>
             </div>
           </div>
@@ -141,7 +163,9 @@ export default function RoleSelectPage() {
             <div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition" />
             <div className="relative">
               <div className="text-5xl mb-4">💰</div>
-              <h2 className="text-2xl font-black text-white mb-4">Become a Bettor</h2>
+              <h2 className="text-2xl font-black text-white mb-4">
+                Become a Bettor
+              </h2>
 
               <div className="space-y-3 mb-6">
                 <p className="text-slate-300 font-semibold">What you get:</p>
@@ -170,8 +194,12 @@ export default function RoleSelectPage() {
               </div>
 
               <div className="p-4 rounded-lg bg-cyan-500/20 border border-cyan-500/50 mb-6">
-                <p className="text-xs text-slate-400 mb-1">Average Monthly Return</p>
-                <p className="text-2xl font-black text-cyan-400">15% - 40%+</p>
+                <p className="text-xs text-slate-400 mb-1">
+                  Average Monthly Return
+                </p>
+                <p className="text-2xl font-black text-cyan-400">
+                  15% - 40%+
+                </p>
               </div>
 
               <button
@@ -179,7 +207,9 @@ export default function RoleSelectPage() {
                 disabled={loading}
                 className="w-full py-3 px-4 rounded-lg bg-linear-to-r from-cyan-500 to-blue-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-cyan-500/50 transition disabled:opacity-50"
               >
-                {loading && selectedRole === 'bettor' ? 'Setting up...' : 'Start as Bettor'}
+                {loading && selectedRole === 'bettor'
+                  ? 'Setting up...'
+                  : 'Start as Bettor'}
               </button>
             </div>
           </div>
@@ -188,7 +218,8 @@ export default function RoleSelectPage() {
         {/* Info Section */}
         <div className="rounded-2xl border border-slate-600/30 bg-slate-800/30 backdrop-blur-xl p-6 text-center">
           <p className="text-slate-400 text-sm">
-            Can&apos;t decide? You can switch roles anytime. Start with one and grow from there! 🚀
+            Can&apos;t decide? You can switch roles anytime. Start with one and
+            grow from there! 🚀
           </p>
         </div>
       </div>

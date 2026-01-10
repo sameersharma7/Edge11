@@ -33,7 +33,8 @@ export default function LoginPage() {
     );
 
     if (user) {
-      const userId = 'test-' + Date.now().toString();
+      // IMPORTANT: use a real UUID, not "test-<timestamp>"
+      const userId = crypto.randomUUID();
 
       sessionStorage.setItem('edge11_logged_in', 'true');
       sessionStorage.setItem('edge11_user_id', userId);
