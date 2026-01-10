@@ -15,10 +15,10 @@ interface Pick {
 }
 
 interface YourPicksProps {
-  currentUserId: string;
+  userId: string;
 }
 
-export default function YourPicks({ currentUserId }: YourPicksProps) {
+export default function YourPicks({ userId }: YourPicksProps) {
   const [picks, setPicks] = useState<Pick[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,22 +26,23 @@ export default function YourPicks({ currentUserId }: YourPicksProps) {
     const fetchPicks = async () => {
       setLoading(true);
       try {
-        if (currentUserId) {
-          const data = await getUserPicks(currentUserId);
+        if (userId) {
+          const data = await getUserPicks(userId);
           setPicks(data);
         }
       } catch (error) {
         console.error('Error fetching picks:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchPicks();
-  }, [currentUserId]);
+  }, [userId]);
 
   if (loading) {
     return (
-      <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+      <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
         <h3 className="text-sm font-bold text-cyan-400 mb-4 uppercase tracking-widest">
           📋 Your Picks
         </h3>
@@ -54,7 +55,7 @@ export default function YourPicks({ currentUserId }: YourPicksProps) {
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-linear-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
+    <div className="rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-700/50 to-slate-800/50 backdrop-blur-xl p-6">
       <h3 className="text-sm font-bold text-cyan-400 mb-4 uppercase tracking-widest">
         📋 Your Picks
       </h3>
