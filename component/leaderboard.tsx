@@ -13,7 +13,11 @@ interface LeaderboardEntry {
   win_rate?: number;
 }
 
-export default function Leaderboard() {
+interface LeaderboardProps {
+  currentUserId?: string;
+}
+
+export default function Leaderboard({ currentUserId }: LeaderboardProps) {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 

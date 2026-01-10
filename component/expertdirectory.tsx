@@ -13,11 +13,14 @@ interface Expert {
   total_winnings: number;
 }
 
-export default function ExpertDirectory() {
+interface ExpertDirectoryProps {
+  currentUserId: string;
+}
+
+export default function ExpertDirectory({ currentUserId }: ExpertDirectoryProps) {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [following, setFollowing] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [currentUserId] = useState('user_session_id');
 
   useEffect(() => {
     const fetchExperts = async () => {

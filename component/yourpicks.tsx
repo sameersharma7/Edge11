@@ -14,10 +14,13 @@ interface Pick {
   created_at: string;
 }
 
-export default function YourPicks() {
+interface YourPicksProps {
+  currentUserId: string;
+}
+
+export default function YourPicks({ currentUserId }: YourPicksProps) {
   const [picks, setPicks] = useState<Pick[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentUserId] = useState('user_session_id');
 
   useEffect(() => {
     const fetchPicks = async () => {
